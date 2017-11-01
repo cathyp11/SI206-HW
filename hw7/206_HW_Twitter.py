@@ -84,11 +84,9 @@ def get_data(word):
 	search_url = "twitter_{}".format(word)
 	# if data is already cached, refer back to cached data
 	if search_url in CACHE_DICTION:
-		print("using cache")
 		data = CACHE_DICTION[search_url]
 	else:
 	# if data isn't cached, fetch real-time data from Twitter
-		print("fetching")
 		# search through the Twitter API with the word
 		data = api.search(q=word)
 		CACHE_DICTION[search_url] = data
