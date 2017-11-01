@@ -86,8 +86,8 @@ for line in umsi_tweets['statuses']:
 	retweet = line['retweet_count']
 	# row = cur.fetchone()
 	cur.execute('''INSERT INTO Tweets (tweet_id, author, time_posted, tweet_text, retweets) VALUES (?, ?, ?, ?, ?)''', (ids, name, date, text, retweet))
-	conn.commit()
-cur.close()
+conn.commit()
+
 
 
 #  5- Use the database connection to commit the changes to the database
@@ -101,13 +101,21 @@ cur.close()
     # Mon Oct 09 15:45:45 +0000 2017 - RT @MikeRothCom: Beautiful morning at @UMich - It’s easy to forget to
     # take in the view while running from place to place @umichDLHS  @umich…
 # Include the blank line between each tweet.
+cur.execute('SELECT time_posted, tweet_text FROM Tweets')
 
+for row in cur:
+	print(row[0], " - ", row[1], "\n")
 
 # Select the author of all of the tweets (the full rows/tuples of information) that have been retweeted MORE
 # than 2 times, and fetch them into the variable more_than_2_rts.
 # Print the results
+cur.execute('SELECT author FROM Tweets WHERE retweets > 2')
+for row in cur:
+	more_than_2_rts = row
+	print(more_than_2_rts[0])
 
-
+cur.close()
+conn.close()
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
