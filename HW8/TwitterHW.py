@@ -35,13 +35,13 @@ except:
 
 def get_tweets():
 ##YOUR CODE HERE
-	search_url = "twitter_{}".format("umsi")
+	search_url = "twitter_umsi"
 	# if data is already cached, refer back to cached data
 	if search_url in CACHE_DICTION:
 		data = CACHE_DICTION[search_url]
 	else:
 	# if data isn't cached, fetch real-time data from Twitter
-		# search through the Twitter API with the word
+		# search through the Twitter API with "umsi"
 		data = api.search(q="umsi")
 		CACHE_DICTION[search_url] = data
 		# dump the existing cached data
@@ -78,13 +78,11 @@ umsi_tweets = get_tweets()
 # 4 - Use a for loop, the cursor you defined above to execute INSERT statements, that insert the data from each of the tweets in umsi_tweets into the correct columns in each row of the Tweets database table.
 count = 0
 for line in umsi_tweets['statuses']:
-	# print(line)
 	ids = line['id']
 	name = line['user']['screen_name']
 	date = line['created_at']
 	text = line['text']
 	retweet = line['retweet_count']
-	# row = cur.fetchone()
 	cur.execute('''INSERT INTO Tweets (tweet_id, author, time_posted, tweet_text, retweets) VALUES (?, ?, ?, ?, ?)''', (ids, name, date, text, retweet))
 conn.commit()
 
@@ -101,6 +99,8 @@ conn.commit()
     # Mon Oct 09 15:45:45 +0000 2017 - RT @MikeRothCom: Beautiful morning at @UMich - It’s easy to forget to
     # take in the view while running from place to place @umichDLHS  @umich…
 # Include the blank line between each tweet.
+
+# select time_posted and tweet_text from the table Tweets
 cur.execute('SELECT time_posted, tweet_text FROM Tweets')
 
 for row in cur:
@@ -109,9 +109,11 @@ for row in cur:
 # Select the author of all of the tweets (the full rows/tuples of information) that have been retweeted MORE
 # than 2 times, and fetch them into the variable more_than_2_rts.
 # Print the results
+
 cur.execute('SELECT author FROM Tweets WHERE retweets > 2')
 for row in cur:
 	more_than_2_rts = row
+	# only print the name of the author that has been retweeted more than 2 times
 	print(more_than_2_rts[0])
 
 cur.close()
